@@ -1,0 +1,18 @@
+.container_home {
+  padding-top: 30px;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.source_code_link_wrapper {
+  color: black;
+  background-color: white;
+  width: 10%;
+  text-align: center;
+  margin: auto;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 4px;
+}
