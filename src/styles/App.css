@@ -10,5 +10,5 @@ body {
 
 body {
   text-align: center;
-  background-color: whitesmoke;
+  background-color: whitesmoke !important;
 }
