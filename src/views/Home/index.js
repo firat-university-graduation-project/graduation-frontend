@@ -10,11 +10,11 @@ const Home = () => {
 
   const join = () => {
     if (url !== "") {
-      let newUrl = url.split("")
+      let newUrl = url.split("/")
       window.location.href = `/${newUrl[newUrl.length - 1]}`
     } else {
       let newUrl = Math.random().toString(36).substring(2, 7)
-      window.location.href = `${newUrl}`
+      window.location.href = `/${newUrl}`
     }
   }
 
