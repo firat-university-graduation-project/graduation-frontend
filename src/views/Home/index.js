@@ -33,16 +33,15 @@ const Home = () => {
             <GitHubIcon />
           </IconButton>
         </div>
-
         <div className="title">
           <h1
             style={{ fontSize: "45px", marginBottom: "8px", fontWeight: "500" }}
           >
-            Video Meeting
+            Graduation Project~Video Meeting
           </h1>
           <p style={{ fontWeight: "200" }}>
-            Video conference website that lets you stay in touch with all your
-            friends.
+            Intelligent video conferencing website that provides image
+            processing with artificial intelligence.
           </p>
         </div>
 
