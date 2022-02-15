@@ -1,3 +1,8 @@
+# Graduation Demo Frontend Project
+
+## Intelligent video conferencing website that provides image processing with artificial intelligence.
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
