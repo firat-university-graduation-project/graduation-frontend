@@ -3,14 +3,16 @@ import io from "socket.io-client"
 import faker from "faker"
 
 import { IconButton, Badge, Input, Button } from "@material-ui/core"
-import VideocamIcon from "@material-ui/icons/Videocam"
-import VideocamOffIcon from "@material-ui/icons/VideocamOff"
-import MicIcon from "@material-ui/icons/Mic"
-import MicOffIcon from "@material-ui/icons/MicOff"
-import ScreenShareIcon from "@material-ui/icons/ScreenShare"
-import StopScreenShareIcon from "@material-ui/icons/StopScreenShare"
-import CallEndIcon from "@material-ui/icons/CallEnd"
-import ChatIcon from "@material-ui/icons/Chat"
+import {
+  VideocamIcon,
+  VideocamOffIcon,
+  MicIcon,
+  MicOffIcon,
+  ScreenShareIcon,
+  StopScreenShareIcon,
+  CallEndIcon,
+  ChatIcon,
+} from "../../components/Icons"
 
 import { message } from "antd"
 import "antd/dist/antd.css"
@@ -20,23 +22,22 @@ import Modal from "react-bootstrap/Modal"
 import "bootstrap/dist/css/bootstrap.css"
 import "./Video.css"
 
-const server_url = "http://localhost:4000"
+import ScreenRecord from "../../components/ScreenRecord"
 
-var connections = {}
+let connections = {}
 const peerConnectionConfig = {
   iceServers: [
     // { 'urls': 'stun:stun.services.mozilla.com' },
     { urls: "stun:stun.l.google.com:19302" },
   ],
 }
-var socket = null
-var socketId = null
-var elms = 0
+let socket = null
+let socketId = null
+let elms = 0
 
 class Video extends Component {
   constructor(props) {
     super(props)
-    console.log("Created Video Component")
 
     this.localVideoref = React.createRef()
 
@@ -270,7 +271,7 @@ class Video extends Component {
   }
 
   gotMessageFromServer = (fromId, message) => {
-    var signal = JSON.parse(message)
+    let signal = JSON.parse(message)
 
     if (fromId !== socketId) {
       if (signal.sdp) {
@@ -343,7 +344,7 @@ class Video extends Component {
   }
 
   connectToSocketServer = () => {
-    socket = io.connect(server_url, { secure: true })
+    socket = io.connect(process.env.REACT_APP_SERVER_URL, { secure: true })
 
     socket.on("signal", this.gotMessageFromServer)
 
@@ -383,7 +384,7 @@ class Video extends Component {
           // Wait for their video stream
           connections[socketListId].onaddstream = (event) => {
             // TODO mute button, full screen button
-            var searchVidep = document.querySelector(
+            let searchVidep = document.querySelector(
               `[data-socket="${socketListId}"]`
             )
             if (searchVidep !== null) {
@@ -675,6 +676,8 @@ class Video extends Component {
                   )}
                 </IconButton>
               ) : null}
+
+              <ScreenRecord />
 
               <Badge
                 badgeContent={this.state.newmessages}
