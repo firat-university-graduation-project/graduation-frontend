@@ -1,0 +1,14 @@
+.button {
+  outline: none;
+  border: none;
+  background-color: whitesmoke;
+  max-width: 48px;
+  max-height: 48px;
+}
+
+.downloadButton {
+  /* background-color: black; */
+  /* margin-left: 1rem; */
+  /* padding-left: 10px;
+  padding-right: 10px; */
+}
