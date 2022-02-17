@@ -9,19 +9,23 @@ const Home = () => {
   const handleChange = (e) => setUrl(e.target.value)
 
   const join = () => {
+    let newUrl = ""
     if (url !== "") {
-      let newUrl = url.split("/")
+      newUrl = url.split("/")
       window.location.href = `/${newUrl[newUrl.length - 1]}`
     } else {
-      let newUrl = Math.random().toString(36).substring(2, 7)
-      window.location.href = `/${newUrl}`
+      // let newUrl = Math.random().toString(36).substring(2, 7)
+      // window.location.href = `/${newUrl}`
+      alert("Please enter a URL.")
+      setUrl("")
+      newUrl = ""
     }
   }
 
   return (
     <div>
       <div className="container_home">
-        <div className="source_code_link_wrapper">
+        {/* <div className="source_code_link_wrapper">
           Source Code:
           <IconButton
             style={{ color: "black" }}
@@ -32,7 +36,7 @@ const Home = () => {
           >
             <GitHubIcon />
           </IconButton>
-        </div>
+        </div> */}
         <div className="title">
           <h1
             style={{ fontSize: "45px", marginBottom: "8px", fontWeight: "500" }}
@@ -60,14 +64,18 @@ const Home = () => {
           <p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>
             Start or join a meeting
           </p>
-          <Input placeholder="URL" onChange={(e) => handleChange(e)} />
+          <Input
+            placeholder="URL"
+            onChange={(e) => handleChange(e)}
+            required={true}
+          />
           <Button
             variant="contained"
             color="primary"
             onClick={() => join()}
             style={{ margin: "20px" }}
           >
-            Go
+            Join
           </Button>
         </div>
       </div>
