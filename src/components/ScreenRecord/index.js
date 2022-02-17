@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { FileDownloadIcon } from "../Icons"
 import { useReactMediaRecorder } from "react-media-recorder"
 import {
@@ -9,9 +9,17 @@ import {
 import { IconButton } from "@material-ui/core"
 import styles from "./ScreenRecord.module.css"
 
-const ScreenRecord = () => {
+const ScreenRecord = (props) => {
+  let { parentCallback } = props
   const { status, startRecording, stopRecording, mediaBlobUrl } =
     useReactMediaRecorder({ audio: true, screen: true })
+
+  const setMediaBlobUrl = () => {
+    console.log(mediaBlobUrl)
+    if (mediaBlobUrl && status === "stopped") {
+      parentCallback(mediaBlobUrl)
+    }
+  }
 
   return (
     <>
@@ -20,11 +28,11 @@ const ScreenRecord = () => {
           <button onClick={startRecording} className={styles.button}>
             <BsFillRecordCircleFill fill="#2dfb2d" size={23} />
           </button>
-        </IconButton> 
+        </IconButton>
       )}
 
       {mediaBlobUrl && status === "stopped" && (
-        <IconButton style={{ color: "#424242" }}>
+        <IconButton style={{ color: "#424242" }} onClick={setMediaBlobUrl}>
           <a
             href={mediaBlobUrl}
             download={"video.mp4"}

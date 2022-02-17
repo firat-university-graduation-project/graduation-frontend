@@ -23,6 +23,7 @@ import "bootstrap/dist/css/bootstrap.css"
 import "./Video.css"
 
 import ScreenRecord from "../../components/ScreenRecord"
+import Preview from "../../components/Preview"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -55,6 +56,7 @@ class Video extends Component {
       newmessages: 0,
       askForUsername: true,
       username: faker.internet.userName(),
+      mediaBlobUrl: "",
     }
     connections = {}
 
@@ -550,6 +552,11 @@ class Video extends Component {
     return matchChrome !== null
   }
 
+  handleChildClick = (newMediaBlobUrl) => {
+    this.setState({ mediaBlobUrl: newMediaBlobUrl })
+    console.log("mediaBlobUrl: ", newMediaBlobUrl)
+  }
+
   render() {
     if (this.isChrome() === false) {
       return (
@@ -677,7 +684,7 @@ class Video extends Component {
                 </IconButton>
               ) : null}
 
-              <ScreenRecord />
+              <ScreenRecord parentCallback={this.handleChildClick} />
 
               <Badge
                 badgeContent={this.state.newmessages}
@@ -693,6 +700,8 @@ class Video extends Component {
                 </IconButton>
               </Badge>
             </div>
+
+            <Preview mediaBlobUrl={this.state.mediaBlobUrl} />
 
             <Modal
               show={this.state.showModal}
