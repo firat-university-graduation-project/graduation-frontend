@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import io from "socket.io-client"
-import faker from "faker"
 
 import { IconButton, Badge, Input, Button } from "@material-ui/core"
 import {
@@ -15,7 +14,6 @@ import {
 } from "../../components/Icons"
 
 import { message } from "antd"
-import "antd/dist/antd.css"
 
 import { Row } from "reactstrap"
 import Modal from "react-bootstrap/Modal"
@@ -23,7 +21,10 @@ import "bootstrap/dist/css/bootstrap.css"
 import "./Video.css"
 
 import ScreenRecord from "../../components/ScreenRecord"
-import Preview from "../../components/Preview"
+import PreviewModal from "../../components/Modal/Preview"
+import MessageModal from "../../components/Modal/Message"
+
+import { StylesUtil, CopyTextUtil } from "../../utils/index"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -55,7 +56,7 @@ class Video extends Component {
       message: "",
       newmessages: 0,
       askForUsername: true,
-      username: faker.internet.userName(),
+      username: "",
       mediaBlobUrl: "",
     }
     connections = {}
@@ -66,14 +67,15 @@ class Video extends Component {
   getPermissions = async () => {
     try {
       await navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(() => (this.videoAvailable = true))
-        .catch(() => (this.videoAvailable = false))
-
-      await navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then(() => (this.audioAvailable = true))
-        .catch(() => (this.audioAvailable = false))
+        .getUserMedia({ video: true, audio: true })
+        .then(() => {
+          this.videoAvailable = true
+          this.audioAvailable = true
+        })
+        .catch(() => {
+          this.videoAvailable = false
+          this.audioAvailable = false
+        })
 
       if (navigator.mediaDevices.getDisplayMedia) {
         this.setState({ screenAvailable: true })
@@ -91,7 +93,6 @@ class Video extends Component {
             window.localStream = stream
             this.localVideoref.current.srcObject = stream
           })
-          .then((stream) => {})
           .catch((e) => console.log(e))
       }
     } catch (e) {
@@ -120,7 +121,6 @@ class Video extends Component {
       navigator.mediaDevices
         .getUserMedia({ video: this.state.video, audio: this.state.audio })
         .then(this.getUserMediaSuccess)
-        .then((stream) => {})
         .catch((e) => console.log(e))
     } else {
       try {
@@ -210,7 +210,6 @@ class Video extends Component {
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: true })
           .then(this.getDislayMediaSuccess)
-          .then((stream) => {})
           .catch((e) => console.log(e))
       }
     }
@@ -552,9 +551,8 @@ class Video extends Component {
     return matchChrome !== null
   }
 
-  handleChildClick = (newMediaBlobUrl) => {
+  handlePreviewUrl = (newMediaBlobUrl) => {
     this.setState({ mediaBlobUrl: newMediaBlobUrl })
-    console.log("mediaBlobUrl: ", newMediaBlobUrl)
   }
 
   render() {
@@ -684,7 +682,7 @@ class Video extends Component {
                 </IconButton>
               ) : null}
 
-              <ScreenRecord parentCallback={this.handleChildClick} />
+              <ScreenRecord parentCallback={this.handlePreviewUrl} />
 
               <Badge
                 badgeContent={this.state.newmessages}
@@ -701,7 +699,7 @@ class Video extends Component {
               </Badge>
             </div>
 
-            <Preview mediaBlobUrl={this.state.mediaBlobUrl} />
+            <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
 
             <Modal
               show={this.state.showModal}
