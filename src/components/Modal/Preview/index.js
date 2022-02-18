@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import Button from "react-bootstrap/Button"
 
-const Preview = (props) => {
+const PreviewModal = (props) => {
   let { mediaBlobUrl } = props
   const [show, setShow] = useState(true)
 
@@ -15,8 +15,6 @@ const Preview = (props) => {
       {mediaBlobUrl && (
         <>
           <Modal
-            // show={mediaBlobUrl}
-            // onHide={!mediaBlobUrl}
             show={show}
             onHide={handleClose}
             animation={false}
@@ -54,4 +52,4 @@ const Preview = (props) => {
   )
 }
 
-export default Preview
+export default PreviewModal
