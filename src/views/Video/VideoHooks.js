@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import io from "socket.io-client"
 
 import { IconButton, Badge, Input, Button } from "@material-ui/core"
@@ -13,7 +13,7 @@ import {
   ChatIcon,
 } from "../../components/Icons"
 
-import { message } from "antd"
+import { message as messageComponent } from "antd"
 
 import { Row } from "reactstrap"
 import Modal from "react-bootstrap/Modal"
@@ -22,9 +22,8 @@ import "./Video.css"
 
 import ScreenRecord from "../../components/ScreenRecord"
 import PreviewModal from "../../components/Modal/Preview"
-import MessageModal from "../../components/Modal/Message"
+// import MessageModal from "../../components/Modal/Message"
 
-let connections = {}
 const peerConnectionConfig = {
   iceServers: [
     // { 'urls': 'stun:stun.services.mozilla.com' },
@@ -36,7 +35,7 @@ let socketId = null
 let elms = 0
 
 const Video = () => {
-  let localVideoref = React.createRef()
+  let localVideoref = useRef()
   let videoAvailable = false
   let audioAvailable = false
   let connections = {}
@@ -53,7 +52,9 @@ const Video = () => {
   const [username, setUsername] = useState("")
   const [mediaBlobUrl, setMediaBlobUrl] = useState("")
 
-  getPermissions()
+  useEffect(() => {
+    getPermissions()
+  })
 
   async function getPermissions() {
     try {
@@ -63,7 +64,6 @@ const Video = () => {
           videoAvailable = true
           audioAvailable = true
         })
-        .then((stream) => {})
         .catch(() => {
           videoAvailable = false
           audioAvailable = false
@@ -73,8 +73,8 @@ const Video = () => {
       else setScreenAvailable(false)
 
       if (videoAvailable || audioAvailable) {
-        navigator
-          .mediaDevices({
+        navigator.mediaDevices
+          .getUserMedia({
             video: videoAvailable,
             audio: audioAvailable,
           })
@@ -89,109 +89,12 @@ const Video = () => {
     }
   }
 
-  function getMedia() {
-    setVideo(videoAvailable)
-    setAudio(audioAvailable)
-
-    getUserMedia()
-    connectToSocketServer()
-  }
-
-  useEffect(() => {
-    getMedia()
-  }, [video, audio])
-
-  function getUserMedia() {
-    if ((video && videoAvailable) || (audio && audioAvailable)) {
-      navigator.mediaDevices
-        .getUserMedia({ video, audio })
-        .then(getUserMediaSuccess)
-        .catch((e) => console.log(e))
-    } else {
-      try {
-        let tracks = localVideoref.current.srcObject.getTracks()
-        tracks.forEach((track) => track.stop())
-      } catch (e) {}
-    }
-  }
-
-  function getUserMediaSuccess(stream) {
-    try {
-      window.localStream.getTracks().forEach((track) => track.stop())
-    } catch (e) {
-      console.log(e)
-    }
-
-    window.localStream = stream
-    localVideoref.current.srcObject = stream
-
-    for (let id in connections) {
-      if (id === socketId) continue
-
-      connections[id].addStream(window.localStream)
-
-      connections[id].createOffer().then((description) => {
-        connections[id]
-          .setLocalDescription(description)
-          .then(() => {
-            socket.emit(
-              "signal",
-              id,
-              JSON.stringify({ sdp: connections[id].localDescription })
-            )
-          })
-          .catch((e) => console.log(e))
-      })
-    }
-
-    stream.getTracks().forEach(
-      (track) =>
-        (track.onended = () => {
-          setVideo(false)
-          setAudio(false)
-        })
-    )
-  }
-
-  useEffect(() => {
-    try {
-      let tracks = localVideoref.current.srcObject.getTracks()
-      tracks.forEach((track) => track.stop())
-    } catch (e) {
-      console.log(e)
-    }
-
-    let blackSilence = (...args) => new MediaStream([black(...args), silence()])
-    window.localStream = blackSilence()
-    localVideoref.current.srcObject = window.localStream
-
-    for (let id in connections) {
-      connections[id].addStream(window.localStream)
-
-      connections[id].createOffer().then((description) => {
-        connections[id]
-          .setLocalDescription(description)
-          .then(() => {
-            socket.emit(
-              "signal",
-              id,
-              JSON.stringify({
-                sdp: connections[id].localDescription,
-              })
-            )
-          })
-          .catch((e) => console.log(e))
-      })
-    }
-  }, [video, audio])
-
   function getDisplayMedia() {
     if (screen) {
       if (navigator.mediaDevices.getDisplayMedia) {
         navigator.mediaDevices
           .getDisplayMedia({ video: true, audio: true })
           .then(getDisplayMediaSuccess)
-          .then((stream) => {})
           .catch((e) => console.log(e))
       }
     }
@@ -230,24 +133,23 @@ const Video = () => {
       (track) =>
         (track.onended = () => {
           setScreen(false)
+
+          try {
+            let tracks = localVideoref.current.srcObject.getTracks()
+            tracks.forEach((track) => track.stop())
+          } catch (e) {
+            console.log(e)
+          }
+
+          let blackSilence = (...args) =>
+            new MediaStream([black(...args), silence()])
+          window.localStream = blackSilence()
+          localVideoref.current.srcObject = window.localStream
+
+          getUserMedia()
         })
     )
   }
-
-  useEffect(() => {
-    try {
-      let tracks = localVideoref.current.srcObject.getTracks()
-      tracks.forEach((track) => track.stop())
-    } catch (e) {
-      console.log(e)
-    }
-
-    let blackSilence = (...args) => new MediaStream([black(...args), silence()])
-    window.localStream = blackSilence()
-    localVideoref.current.srcObject = window.localStream
-
-    getUserMedia()
-  }, [screen])
 
   function gotMessageFromServer(fromId, message) {
     let signal = JSON.parse(message)
@@ -457,24 +359,16 @@ const Video = () => {
     setVideo(!video)
     getUserMedia()
   }
-  useEffect(() => {
-    handleAudio()
-  }, [video])
 
   function handleAudio() {
     setAudio(!audio)
     getUserMedia()
   }
 
-  useEffect(() => {
-    handleAudio()
-  }, [audio])
   function handleScreen() {
     setScreen(!screen)
+    getDisplayMedia()
   }
-  useEffect(() => {
-    handleScreen()
-  }, [screen])
 
   function handleEndCall() {
     try {
@@ -513,7 +407,8 @@ const Video = () => {
 
   function sendMessage() {
     socket.emit("chat-message", message, username)
-    setMessages({ ...messages, username })
+    setMessage("")
+    // setMessages({ message: "", username })
   }
 
   function copyUrl() {
@@ -526,30 +421,117 @@ const Video = () => {
       textArea.select()
       try {
         document.execCommand("copy")
-        message.success("Link copied to clipboard!")
+        messageComponent.success("Link copied to clipboard!")
       } catch (err) {
-        message.error("Failed to copy")
+        messageComponent.error("Failed to copy")
       }
       document.body.removeChild(textArea)
       return
     }
     navigator.clipboard.writeText(text).then(
       function () {
-        message.success("Link copied to clipboard!")
+        messageComponent.success("Link copied to clipboard!")
       },
       () => {
-        message.error("Failed to copy")
+        messageComponent.error("Failed to copy")
       }
     )
+  }
+
+  function getUserMediaSuccess(stream) {
+    try {
+      window.localStream.getTracks().forEach((track) => track.stop())
+    } catch (e) {
+      console.log(e)
+    }
+
+    window.localStream = stream
+    localVideoref.current.srcObject = stream
+
+    for (let id in connections) {
+      if (id === socketId) continue
+
+      connections[id].addStream(window.localStream)
+
+      connections[id].createOffer().then((description) => {
+        connections[id]
+          .setLocalDescription(description)
+          .then(() => {
+            socket.emit(
+              "signal",
+              id,
+              JSON.stringify({ sdp: connections[id].localDescription })
+            )
+          })
+          .catch((e) => console.log(e))
+      })
+    }
+
+    stream.getTracks().forEach(
+      (track) =>
+        (track.onended = () => {
+          setVideo(false)
+          setAudio(false)
+          try {
+            let tracks = localVideoref.current.srcObject.getTracks()
+            tracks.forEach((track) => track.stop())
+          } catch (e) {
+            console.log(e)
+          }
+
+          let blackSilence = (...args) =>
+            new MediaStream([black(...args), silence()])
+          window.localStream = blackSilence()
+          localVideoref.current.srcObject = window.localStream
+
+          for (let id in connections) {
+            connections[id].addStream(window.localStream)
+
+            connections[id].createOffer().then((description) => {
+              connections[id]
+                .setLocalDescription(description)
+                .then(() => {
+                  socket.emit(
+                    "signal",
+                    id,
+                    JSON.stringify({
+                      sdp: connections[id].localDescription,
+                    })
+                  )
+                })
+                .catch((e) => console.log(e))
+            })
+          }
+        })
+    )
+  }
+
+  function getUserMedia() {
+    if ((video && videoAvailable) || (audio && audioAvailable)) {
+      navigator.mediaDevices
+        .getUserMedia({ video: video, audio: audio })
+        .then(getUserMediaSuccess)
+        .catch((e) => console.log(e))
+    } else {
+      try {
+        let tracks = localVideoref.current.srcObject.getTracks()
+        tracks.forEach((track) => track.stop())
+      } catch (e) {}
+    }
+  }
+
+  function getMedia() {
+    setVideo(videoAvailable)
+    setAudio(audioAvailable)
+
+    getUserMedia()
+    connectToSocketServer()
   }
 
   function connect() {
     setAskForUsername(false)
     getMedia()
   }
-  useEffect(() => {
-    connect()
-  }, [askForUsername])
 
   function isChrome() {
     let userAgent = (navigator && (navigator.userAgent || "")).toLowerCase()
