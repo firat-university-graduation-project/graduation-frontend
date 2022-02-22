@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import io from "socket.io-client"
+import VideoContext from "./VideoContext"
 
 import { IconButton, Badge, Input, Button } from "@material-ui/core"
 import {
@@ -22,9 +23,6 @@ import "./Video.css"
 
 import ScreenRecord from "../../components/ScreenRecord"
 import PreviewModal from "../../components/Modal/Preview"
-import MessageModal from "../../components/Modal/Message"
-
-import { StylesUtil, CopyTextUtil } from "../../utils/index"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -38,11 +36,12 @@ let socketId = null
 let elms = 0
 
 class Video extends Component {
+  static contextType = VideoContext
+
   constructor(props) {
     super(props)
 
     this.localVideoref = React.createRef()
-
     this.videoAvailable = false
     this.audioAvailable = false
 
@@ -65,6 +64,7 @@ class Video extends Component {
   }
 
   getPermissions = async () => {
+    console.log("this.context: ", this.context, VideoContext)
     try {
       await navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
