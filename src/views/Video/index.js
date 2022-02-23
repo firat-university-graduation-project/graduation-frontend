@@ -517,48 +517,46 @@ class Video extends Component {
           />
         ) : (
           <div className="container">
-            <div className="main">
-              <ControlBar
-                handleVideo={this.handleVideo}
-                handleEndCall={this.handleEndCall}
-                handleAudio={this.handleAudio}
-                handleScreen={this.handleScreen}
-                screenAvailable={this.state.screenAvailable}
-                screen={this.state.screen}
-                newmessages={this.state.newmessages}
-                audio={this.state.audio}
-                openChat={this.openChat}
-                handlePreviewUrl={(mediaBlobUrl) =>
-                  this.setState({ mediaBlobUrl })
-                }
-                video={this.state.video}
-              />
+            <ControlBar
+              className="control_bar"
+              handleVideo={this.handleVideo}
+              handleEndCall={this.handleEndCall}
+              handleAudio={this.handleAudio}
+              handleScreen={this.handleScreen}
+              screenAvailable={this.state.screenAvailable}
+              screen={this.state.screen}
+              newmessages={this.state.newmessages}
+              audio={this.state.audio}
+              openChat={this.openChat}
+              handlePreviewUrl={(mediaBlobUrl) =>
+                this.setState({ mediaBlobUrl })
+              }
+              video={this.state.video}
+            />
 
-              <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
+            <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
 
-              <MessageModal
-                showModal={this.state.showModal}
-                messages={this.state.messages}
-                message={this.state.message}
-                handleMessage={this.handleMessage}
-                sendMessage={this.sendMessage}
-                closeChat={this.closeChat}
-              />
-              <VideoComp
-                video={this.state.video}
-                localVideoref={this.localVideoref}
-                username={this.state.username}
-              />
-            </div>
-
-            <MessageBar
-              className="message_bar"
+            <MessageModal
               showModal={this.state.showModal}
               messages={this.state.messages}
               message={this.state.message}
               handleMessage={this.handleMessage}
               sendMessage={this.sendMessage}
               closeChat={this.closeChat}
+            />
+            <VideoComp
+              className="video_comp"
+              video={this.state.video}
+              localVideoref={this.localVideoref}
+              username={this.state.username}
+            />
+
+            <MessageBar
+              className="message_bar"
+              messages={this.state.messages}
+              message={this.state.message}
+              handleMessage={this.handleMessage}
+              sendMessage={this.sendMessage}
             />
           </div>
         )}
