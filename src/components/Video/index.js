@@ -1,5 +1,4 @@
 import React from "react"
-import CopyUrl from "../CopyUrl"
 import { Row, Container } from "reactstrap"
 import "./video.css"
 
@@ -7,31 +6,21 @@ const Video = (props) => {
   const { video, localVideoref, username } = props
   return (
     <div className="video_container">
-      <CopyUrl />
-
       <Row
         id="main"
         className="flex-container"
         style={{ margin: 0, padding: 0 }}
       >
         {video == true ? (
-          <video
-            id="my-video"
-            ref={localVideoref}
-            autoPlay
-            muted
-            style={{
-              borderStyle: "solid",
-              borderColor: "#bdbdbd",
-              margin: "10px",
-              objectFit: "fill",
-              width: "50%",
-              height: "50%",
-            }}
-          ></video>
+          <video id="my-video" ref={localVideoref} autoPlay muted />
         ) : (
-          <div style={{ backgroundColor: "red" }}>
-            <h2>{username || "Username"}</h2>
+          <div className="user_silhouette_wrapper">
+            <img
+              className="user_silhouette"
+              src="images/user-silhouette.jpg"
+              alt="User Silhouette"
+            />
+            <p>{username}</p>
           </div>
         )}
       </Row>

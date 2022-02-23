@@ -1,4 +1,36 @@
 .video_container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+.flex-container {
+  height: calc(100% - 150px);
+  width: 100%;
+  /* margin: 0 auto; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#my-video {
+  border-style: solid;
+  border-color: #bdbdbd;
+  margin: 10px;
+  object-fit: fill;
+  width: 50%;
+  height: 50%;
+}
+
+.user_silhouette_wrapper > p {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.user_silhouette {
+  height: 50%;
+  max-height: 150px;
+  width: auto;
+  border-radius: 50%;
 }
