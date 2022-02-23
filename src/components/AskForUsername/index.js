@@ -25,6 +25,7 @@ const AskForUsername = (props) => {
           placeholder="Username"
           value={username}
           onChange={(e) => handleUsername(e)}
+          onKeyDown={(e) => e.key === "Enter" && connect()}
           required
         />
         <Button
