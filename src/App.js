@@ -1,8 +1,8 @@
 import "./styles/App.css"
+import "antd/dist/antd.css"
 import Home from "./views/Home"
 import Video from "./views/Video"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
-import "antd/dist/antd.css"
 
 function App() {
   return (
