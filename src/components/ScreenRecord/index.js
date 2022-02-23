@@ -1,11 +1,6 @@
 import React, { useState } from "react"
-import { FileDownloadIcon } from "../Icons"
+import { RadioButtonCheckedIcon, DownloadIcon } from "../Icons"
 import { useReactMediaRecorder } from "react-media-recorder"
-import {
-  BsFillRecordCircleFill,
-  BsFillStopCircleFill,
-  BsDownload,
-} from "react-icons/bs"
 import { IconButton } from "@material-ui/core"
 import styles from "./ScreenRecord.module.css"
 
@@ -24,30 +19,26 @@ const ScreenRecord = (props) => {
   return (
     <>
       {(status === "idle" || status === "stopped") && (
-        <IconButton style={{ color: "#424242" }}>
-          <button onClick={startRecording} className={styles.button}>
-            <BsFillRecordCircleFill fill="#2dfb2d" size={23} />
-          </button>
+        <IconButton style={{ color: "#1aec1a" }} onClick={startRecording}>
+          <RadioButtonCheckedIcon fill="#1aec1a" size={23} />
         </IconButton>
       )}
 
       {mediaBlobUrl && status === "stopped" && (
-        <IconButton style={{ color: "#424242" }} onClick={setMediaBlobUrl}>
+        <IconButton onClick={setMediaBlobUrl} style={{ color: "#1a9fec" }}>
           <a
             href={mediaBlobUrl}
             download={"video.mp4"}
-            className={`${styles.button} ${styles.downloadButton}`}
+            className={styles.downloadButton}
           >
-            <BsDownload />
+            <DownloadIcon />
           </a>
         </IconButton>
       )}
 
       {status === "recording" && (
-        <IconButton style={{ color: "#424242" }}>
-          <button onClick={stopRecording} className={styles.button}>
-            <BsFillStopCircleFill fill="#f34040" size={23} />
-          </button>
+        <IconButton style={{ color: "#f34040" }} onClick={stopRecording}>
+          <RadioButtonCheckedIcon fill="#f34040" size={23} />
         </IconButton>
       )}
     </>
