@@ -8,6 +8,7 @@ import MessageModal from "../../components/Modal/Message"
 import AskForUsername from "../../components/AskForUsername"
 import ControlBar from "../../components/ControlBar"
 import VideoComp from "../../components/Video"
+import MessageBar from "../../components/MessageBar"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -462,8 +463,12 @@ class Video extends Component {
     return Object.assign(stream.getVideoTracks()[0], { enabled: false })
   }
 
-  handleVideo = () =>
+  handleVideo = () => {
     this.setState({ video: !this.state.video }, () => this.getUserMedia())
+    let main = document.getElementById("main")
+    this.changeCssVideos(main)
+  }
+
   handleAudio = () =>
     this.setState({ audio: !this.state.audio }, () => this.getUserMedia())
   handleScreen = () =>
@@ -511,38 +516,49 @@ class Video extends Component {
             username={this.state.username}
           />
         ) : (
-          <div>
-            <ControlBar
-              handleVideo={this.handleVideo}
-              handleEndCall={this.handleEndCall}
-              handleAudio={this.handleAudio}
-              handleScreen={this.handleScreen}
-              screenAvailable={this.state.screenAvailable}
-              screen={this.state.screen}
-              newmessages={this.state.newmessages}
-              audio={this.state.audio}
-              openChat={this.openChat}
-              handlePreviewUrl={(mediaBlobUrl) =>
-                this.setState({ mediaBlobUrl })
-              }
-              video={this.state.video}
-            />
+          <div className="container">
+            <div className="main">
+              <ControlBar
+                handleVideo={this.handleVideo}
+                handleEndCall={this.handleEndCall}
+                handleAudio={this.handleAudio}
+                handleScreen={this.handleScreen}
+                screenAvailable={this.state.screenAvailable}
+                screen={this.state.screen}
+                newmessages={this.state.newmessages}
+                audio={this.state.audio}
+                openChat={this.openChat}
+                handlePreviewUrl={(mediaBlobUrl) =>
+                  this.setState({ mediaBlobUrl })
+                }
+                video={this.state.video}
+              />
 
-            <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
+              <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
 
-            <MessageModal
+              <MessageModal
+                showModal={this.state.showModal}
+                messages={this.state.messages}
+                message={this.state.message}
+                handleMessage={this.handleMessage}
+                sendMessage={this.sendMessage}
+                closeChat={this.closeChat}
+              />
+              <VideoComp
+                video={this.state.video}
+                localVideoref={this.localVideoref}
+                username={this.state.username}
+              />
+            </div>
+
+            <MessageBar
+              className="message_bar"
               showModal={this.state.showModal}
               messages={this.state.messages}
               message={this.state.message}
               handleMessage={this.handleMessage}
               sendMessage={this.sendMessage}
               closeChat={this.closeChat}
-            />
-
-            <VideoComp
-              video={this.state.video}
-              localVideoref={this.localVideoref}
-              username={this.state.username}
             />
           </div>
         )}
