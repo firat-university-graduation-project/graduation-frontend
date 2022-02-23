@@ -5,8 +5,6 @@ import "./Home.css"
 const Home = () => {
   const [url, setUrl] = useState("")
 
-  const handleChange = (e) => setUrl(e.target.value)
-
   const join = () => {
     let newUrl = ""
     if (url !== "") {
@@ -23,9 +21,6 @@ const Home = () => {
       <div className="container_home">
         <div className="image_wrapper">
           <img src="images/firat-logo.png" alt="" />
-          <br />
-          <br />
-          <br />
         </div>
         <div className="title">
           <h1
@@ -56,11 +51,9 @@ const Home = () => {
           </p>
           <Input
             placeholder="URL"
-            onChange={(e) => handleChange(e)}
+            onChange={(e) => setUrl(e.target.value)}
             required={true}
-            onKeyDown={(e) => {
-              e.key === "Enter" && join()
-            }}
+            onKeyDown={(e) => e.key === "Enter" && join()}
           />
           <Button
             variant="contained"
