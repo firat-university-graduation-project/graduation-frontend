@@ -7,6 +7,8 @@ import StopScreenShareIcon from "@material-ui/icons/StopScreenShare"
 import CallEndIcon from "@material-ui/icons/CallEnd"
 import ChatIcon from "@material-ui/icons/Chat"
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked"
+import GetAppIcon from "@material-ui/icons/GetApp"
+import FileCopyIcon from '@material-ui/icons/FileCopy';
 
 export {
   VideocamIcon,
@@ -18,4 +20,6 @@ export {
   CallEndIcon,
   ChatIcon,
   RadioButtonCheckedIcon,
+  GetAppIcon as DownloadIcon,
+  FileCopyIcon
 }
