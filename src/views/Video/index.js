@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import io from "socket.io-client"
-import VideoContext from "./VideoContext"
 
 import { IconButton, Badge, Input, Button } from "@material-ui/core"
 import {
@@ -36,8 +35,6 @@ let socketId = null
 let elms = 0
 
 class Video extends Component {
-  static contextType = VideoContext
-
   constructor(props) {
     super(props)
 
@@ -64,7 +61,6 @@ class Video extends Component {
   }
 
   getPermissions = async () => {
-    console.log("this.context: ", this.context, VideoContext)
     try {
       await navigator.mediaDevices
         .getUserMedia({ video: true, audio: true })
@@ -126,6 +122,11 @@ class Video extends Component {
       try {
         let tracks = this.localVideoref.current.srcObject.getTracks()
         tracks.forEach((track) => track.stop())
+
+        navigator.mediaDevices
+          .getUserMedia({ video: false, audio: false })
+          .then(this.getUserMediaSuccess)
+          .catch((e) => console.log(e))
       } catch (e) {}
     }
   }
@@ -540,41 +541,11 @@ class Video extends Component {
   connect = () =>
     this.setState({ askForUsername: false }, () => this.getMedia())
 
-  isChrome = function () {
-    let userAgent = (navigator && (navigator.userAgent || "")).toLowerCase()
-    let vendor = (navigator && (navigator.vendor || "")).toLowerCase()
-    let matchChrome = /google inc/.test(vendor)
-      ? userAgent.match(/(?:chrome|crios)\/(\d+)/)
-      : null
-    // let matchFirefox = userAgent.match(/(?:firefox|fxios)\/(\d+)/)
-    // return matchChrome !== null || matchFirefox !== null
-    return matchChrome !== null
-  }
-
   handlePreviewUrl = (newMediaBlobUrl) => {
     this.setState({ mediaBlobUrl: newMediaBlobUrl })
   }
 
   render() {
-    if (this.isChrome() === false) {
-      return (
-        <div
-          style={{
-            background: "white",
-            width: "30%",
-            height: "auto",
-            padding: "20px",
-            minWidth: "400px",
-            textAlign: "center",
-            margin: "auto",
-            marginTop: "50px",
-            justifyContent: "center",
-          }}
-        >
-          <h1>Sorry, this works only with Google Chrome</h1>
-        </div>
-      )
-    }
     return (
       <div>
         {this.state.askForUsername === true ? (
@@ -768,20 +739,26 @@ class Video extends Component {
                 className="flex-container"
                 style={{ margin: 0, padding: 0 }}
               >
-                <video
-                  id="my-video"
-                  ref={this.localVideoref}
-                  autoPlay
-                  muted
-                  style={{
-                    borderStyle: "solid",
-                    borderColor: "#bdbdbd",
-                    margin: "10px",
-                    objectFit: "fill",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                ></video>
+                {this.state.video == true ? (
+                  <video
+                    id="my-video"
+                    ref={this.localVideoref}
+                    autoPlay
+                    muted
+                    style={{
+                      borderStyle: "solid",
+                      borderColor: "#bdbdbd",
+                      margin: "10px",
+                      objectFit: "fill",
+                      width: "100%",
+                      height: "100%",
+                    }}
+                  ></video>
+                ) : (
+                  <div style={{ backgroundColor: "red" }}>
+                    <h2>{this.state.username || "Username"}</h2>
+                  </div>
+                )}
               </Row>
             </div>
           </div>
