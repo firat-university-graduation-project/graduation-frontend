@@ -15,7 +15,7 @@ import {
 
 import { message } from "antd"
 
-import { Row } from "reactstrap"
+import { Row, Container, Col } from "reactstrap"
 import Modal from "react-bootstrap/Modal"
 import "bootstrap/dist/css/bootstrap.css"
 import "./Video.css"
@@ -733,33 +733,34 @@ class Video extends Component {
                   Copy invite link
                 </Button>
               </div>
-
-              <Row
-                id="main"
-                className="flex-container"
-                style={{ margin: 0, padding: 0 }}
-              >
-                {this.state.video == true ? (
-                  <video
-                    id="my-video"
-                    ref={this.localVideoref}
-                    autoPlay
-                    muted
-                    style={{
-                      borderStyle: "solid",
-                      borderColor: "#bdbdbd",
-                      margin: "10px",
-                      objectFit: "fill",
-                      width: "100%",
-                      height: "100%",
-                    }}
-                  ></video>
-                ) : (
-                  <div style={{ backgroundColor: "red" }}>
-                    <h2>{this.state.username || "Username"}</h2>
-                  </div>
-                )}
-              </Row>
+              <Container>
+                <Row
+                  id="main"
+                  className="flex-container"
+                  style={{ margin: 0, padding: 0 }}
+                >
+                  {this.state.video == true ? (
+                    <video
+                      id="my-video"
+                      ref={this.localVideoref}
+                      autoPlay
+                      muted
+                      style={{
+                        borderStyle: "solid",
+                        borderColor: "#bdbdbd",
+                        margin: "10px",
+                        objectFit: "fill",
+                        width: "50%",
+                        height: "50%",
+                      }}
+                    ></video>
+                  ) : (
+                    <div style={{ backgroundColor: "red" }}>
+                      <h2>{this.state.username || "Username"}</h2>
+                    </div>
+                  )}
+                </Row>
+              </Container>
             </div>
           </div>
         )}
