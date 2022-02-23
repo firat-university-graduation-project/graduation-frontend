@@ -25,12 +25,14 @@ const AskForUsername = (props) => {
           placeholder="Username"
           value={username}
           onChange={(e) => handleUsername(e)}
+          required
         />
         <Button
           variant="contained"
           color="primary"
           onClick={connect}
           style={{ margin: "20px" }}
+          disabled={!username}
         >
           Connect
         </Button>

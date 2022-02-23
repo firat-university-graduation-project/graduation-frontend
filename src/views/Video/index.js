@@ -502,13 +502,15 @@ class Video extends Component {
     this.setState({ message: "", sender: this.state.username })
   }
 
-  connect = () =>
-    this.setState({ askForUsername: false }, () => this.getMedia())
+  connect = () => {
+    if (this.state.username == "") alert("Please enter a username")
+    else this.setState({ askForUsername: false }, () => this.getMedia())
+  }
 
   render() {
     return (
       <div>
-        {this.state.askForUsername === true ? (
+        {this.state.askForUsername ? (
           <AskForUsername
             handleUsername={this.handleUsername}
             connect={this.connect}
