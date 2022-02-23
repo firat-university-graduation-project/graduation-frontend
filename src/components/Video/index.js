@@ -5,7 +5,7 @@ import { Row, Container } from "reactstrap"
 const Video = (props) => {
   const { video, localVideoref, username } = props
   return (
-    <div className="container">
+    <div className="video_container">
       <CopyUrl />
 
       <Container>
