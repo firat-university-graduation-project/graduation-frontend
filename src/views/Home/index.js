@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Input, Button } from "@material-ui/core"
+import { Input, Button, TextField } from "@material-ui/core"
 import "./Home.css"
 
 const Home = () => {
@@ -34,35 +34,29 @@ const Home = () => {
           </p>
         </div>
 
-        <div
-          style={{
-            background: "white",
-            width: "30%",
-            height: "auto",
-            padding: "20px",
-            minWidth: "400px",
-            textAlign: "center",
-            margin: "auto",
-            marginTop: "100px",
-          }}
-        >
-          <p style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}>
+        <div className="login_container">
+          <p style={{ }}>
             Start or join a meeting
           </p>
-          <Input
-            placeholder="URL"
-            onChange={(e) => setUrl(e.target.value)}
-            required={true}
-            onKeyDown={(e) => e.key === "Enter" && join()}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={join}
-            style={{ margin: "20px" }}
-          >
-            Join
-          </Button>
+          <div className="login_wrapper">
+            <TextField
+              placeholder="URL"
+              onChange={(e) => setUrl(e.target.value)}
+              required={true}
+              onKeyDown={(e) => e.key === "Enter" && join()}
+              autoFocus
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={join}
+              style={{ margin: "20px" }}
+              disabled={!url}
+              autoFocus
+            >
+              Join
+            </Button>
+          </div>
         </div>
       </div>
     </div>
