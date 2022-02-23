@@ -20,3 +20,35 @@
 .image_wrapper {
   margin-bottom: 1rem;
 }
+
+.title > h1 {
+  font-size: 45px;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.title > p {
+  font-size: 16px;
+}
+
+.login_container {
+  background-color: #fff;
+  width: 30%;
+  height: auto;
+  padding: 20px;
+  min-width: 400px;
+  text-align: center;
+  margin: auto;
+  margin-top: 100px;
+}
+
+.login_container > p {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.login_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
