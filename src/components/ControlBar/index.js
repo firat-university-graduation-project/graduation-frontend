@@ -11,6 +11,7 @@ import {
   ChatIcon,
 } from "../../components/Icons"
 import ScreenRecord from "../ScreenRecord"
+import CopyUrl from "../CopyUrl"
 
 const ControlBar = (props) => {
   const {
@@ -55,6 +56,8 @@ const ControlBar = (props) => {
       ) : null}
 
       <ScreenRecord parentCallback={handlePreviewUrl} />
+
+      <CopyUrl />
 
       <Badge
         badgeContent={newmessages}

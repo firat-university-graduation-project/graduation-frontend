@@ -1,6 +1,7 @@
 import React from "react"
 import { message } from "antd"
-import { Input, Button } from "@material-ui/core"
+import { FileCopyIcon } from "../Icons"
+import { IconButton } from "@material-ui/core"
 
 const copy_url = () => {
   let text = window.location.href
@@ -31,22 +32,9 @@ const copy_url = () => {
 
 const CopyUrl = () => {
   return (
-    <div style={{ paddingTop: "20px" }}>
-      <Input value={window.location.href} disable="true"></Input>
-      <Button
-        style={{
-          backgroundColor: "#3f51b5",
-          color: "whitesmoke",
-          marginLeft: "20px",
-          marginTop: "10px",
-          width: "120px",
-          fontSize: "10px",
-        }}
-        onClick={copy_url}
-      >
-        Copy invite link
-      </Button>
-    </div>
+    <IconButton onClick={copy_url} style={{ color: "#424242" }}>
+      <FileCopyIcon />
+    </IconButton>
   )
 }
 
