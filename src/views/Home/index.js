@@ -1,6 +1,5 @@
 import React, { useState } from "react"
-import { Input, Button, IconButton } from "@material-ui/core"
-import GitHubIcon from "@material-ui/icons/GitHub"
+import { Input, Button } from "@material-ui/core"
 import "./Home.css"
 
 const Home = () => {
@@ -13,30 +12,21 @@ const Home = () => {
     if (url !== "") {
       newUrl = url.split("/")
       window.location.href = `/${newUrl[newUrl.length - 1]}`
-    } else {
-      // let newUrl = Math.random().toString(36).substring(2, 7)
-      // window.location.href = `/${newUrl}`
-      alert("Please enter a URL.")
       setUrl("")
-      newUrl = ""
+    } else {
+      alert("Please enter a URL.")
     }
   }
 
   return (
     <div>
       <div className="container_home">
-        {/* <div className="source_code_link_wrapper">
-          Source Code:
-          <IconButton
-            style={{ color: "black" }}
-            onClick={() =>
-              (window.location.href =
-                "https://github.com/firat-university-graduation-project/graduation-frontend-demo")
-            }
-          >
-            <GitHubIcon />
-          </IconButton>
-        </div> */}
+        <div className="image_wrapper">
+          <img src="images/firat-logo.png" alt="" />
+          <br />
+          <br />
+          <br />
+        </div>
         <div className="title">
           <h1
             style={{ fontSize: "45px", marginBottom: "8px", fontWeight: "500" }}
@@ -68,11 +58,14 @@ const Home = () => {
             placeholder="URL"
             onChange={(e) => handleChange(e)}
             required={true}
+            onKeyDown={(e) => {
+              e.key === "Enter" && join()
+            }}
           />
           <Button
             variant="contained"
             color="primary"
-            onClick={() => join()}
+            onClick={join}
             style={{ margin: "20px" }}
           >
             Join
