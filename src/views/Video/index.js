@@ -1,27 +1,13 @@
 import React, { Component } from "react"
 import io from "socket.io-client"
-
-import { IconButton, Badge, Input, Button } from "@material-ui/core"
-import {
-  VideocamIcon,
-  VideocamOffIcon,
-  MicIcon,
-  MicOffIcon,
-  ScreenShareIcon,
-  StopScreenShareIcon,
-  CallEndIcon,
-  ChatIcon,
-} from "../../components/Icons"
-
-import { message } from "antd"
-
-import { Row, Container, Col } from "reactstrap"
-import Modal from "react-bootstrap/Modal"
 import "bootstrap/dist/css/bootstrap.css"
 import "./Video.css"
 
-import ScreenRecord from "../../components/ScreenRecord"
 import PreviewModal from "../../components/Modal/Preview"
+import MessageModal from "../../components/Modal/Message"
+import AskForUsername from "../../components/AskForUsername"
+import ControlBar from "../../components/ControlBar"
+import VideoComp from "../../components/Video"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -511,257 +497,53 @@ class Video extends Component {
     this.setState({ message: "", sender: this.state.username })
   }
 
-  copyUrl = () => {
-    let text = window.location.href
-    if (!navigator.clipboard) {
-      let textArea = document.createElement("textarea")
-      textArea.value = text
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
-      try {
-        document.execCommand("copy")
-        message.success("Link copied to clipboard!")
-      } catch (err) {
-        message.error("Failed to copy")
-      }
-      document.body.removeChild(textArea)
-      return
-    }
-    navigator.clipboard.writeText(text).then(
-      function () {
-        message.success("Link copied to clipboard!")
-      },
-      () => {
-        message.error("Failed to copy")
-      }
-    )
-  }
-
   connect = () =>
     this.setState({ askForUsername: false }, () => this.getMedia())
-
-  handlePreviewUrl = (newMediaBlobUrl) => {
-    this.setState({ mediaBlobUrl: newMediaBlobUrl })
-  }
 
   render() {
     return (
       <div>
         {this.state.askForUsername === true ? (
-          <div>
-            <div
-              style={{
-                background: "white",
-                width: "30%",
-                height: "auto",
-                padding: "20px",
-                minWidth: "400px",
-                textAlign: "center",
-                margin: "auto",
-                marginTop: "50px",
-                justifyContent: "center",
-              }}
-            >
-              <p
-                style={{ margin: 0, fontWeight: "bold", paddingRight: "50px" }}
-              >
-                Set your username
-              </p>
-              <Input
-                placeholder="Username"
-                value={this.state.username}
-                onChange={(e) => this.handleUsername(e)}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.connect}
-                style={{ margin: "20px" }}
-              >
-                Connect
-              </Button>
-            </div>
-
-            <div
-              style={{
-                justifyContent: "center",
-                textAlign: "center",
-                paddingTop: "40px",
-              }}
-            >
-              <video
-                id="my-video"
-                ref={this.localVideoref}
-                autoPlay
-                muted
-                style={{
-                  borderStyle: "solid",
-                  borderColor: "#bdbdbd",
-                  objectFit: "fill",
-                  width: "60%",
-                  height: "30%",
-                }}
-              ></video>
-            </div>
-          </div>
+          <AskForUsername
+            handleUsername={this.handleUsername}
+            connect={this.connect}
+            localVideoref={this.localVideoref}
+            username={this.state.username}
+          />
         ) : (
           <div>
-            <div
-              className="btn-down"
-              style={{
-                backgroundColor: "whitesmoke",
-                color: "whitesmoke",
-                textAlign: "center",
-              }}
-            >
-              <IconButton
-                style={{ color: "#424242" }}
-                onClick={this.handleVideo}
-              >
-                {this.state.video === true ? (
-                  <VideocamIcon />
-                ) : (
-                  <VideocamOffIcon />
-                )}
-              </IconButton>
-
-              <IconButton
-                style={{ color: "#f44336" }}
-                onClick={this.handleEndCall}
-              >
-                <CallEndIcon />
-              </IconButton>
-
-              <IconButton
-                style={{ color: "#424242" }}
-                onClick={this.handleAudio}
-              >
-                {this.state.audio === true ? <MicIcon /> : <MicOffIcon />}
-              </IconButton>
-
-              {this.state.screenAvailable === true ? (
-                <IconButton
-                  style={{ color: "#424242" }}
-                  onClick={this.handleScreen}
-                >
-                  {this.state.screen === true ? (
-                    <ScreenShareIcon />
-                  ) : (
-                    <StopScreenShareIcon />
-                  )}
-                </IconButton>
-              ) : null}
-
-              <ScreenRecord parentCallback={this.handlePreviewUrl} />
-
-              <Badge
-                badgeContent={this.state.newmessages}
-                max={999}
-                color="secondary"
-                onClick={this.openChat}
-              >
-                <IconButton
-                  style={{ color: "#424242" }}
-                  onClick={this.openChat}
-                >
-                  <ChatIcon />
-                </IconButton>
-              </Badge>
-            </div>
+            <ControlBar
+              handleVideo={this.handleVideo}
+              handleEndCall={this.handleEndCall}
+              handleAudio={this.handleAudio}
+              handleScreen={this.handleScreen}
+              screenAvailable={this.state.screenAvailable}
+              screen={this.state.screen}
+              newmessages={this.state.newmessages}
+              audio={this.state.audio}
+              openChat={this.openChat}
+              handlePreviewUrl={(mediaBlobUrl) =>
+                this.setState({ mediaBlobUrl })
+              }
+              video={this.state.video}
+            />
 
             <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
 
-            <Modal
-              show={this.state.showModal}
-              onHide={this.closeChat}
-              style={{ zIndex: "999999" }}
-            >
-              <Modal.Header closeButton>
-                <Modal.Title>Chat Room</Modal.Title>
-              </Modal.Header>
-              <Modal.Body
-                style={{
-                  overflow: "auto",
-                  overflowY: "auto",
-                  height: "400px",
-                  textAlign: "left",
-                }}
-              >
-                {this.state.messages.length > 0 ? (
-                  this.state.messages.map((item, index) => (
-                    <div key={index} style={{ textAlign: "left" }}>
-                      <p style={{ wordBreak: "break-all" }}>
-                        <b>{item.sender}</b>: {item.data}
-                      </p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No message yet</p>
-                )}
-              </Modal.Body>
-              <Modal.Footer className="div-send-msg">
-                <Input
-                  placeholder="Message"
-                  value={this.state.message}
-                  onChange={(e) => this.handleMessage(e)}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.sendMessage}
-                >
-                  Send
-                </Button>
-              </Modal.Footer>
-            </Modal>
+            <MessageModal
+              showModal={this.state.showModal}
+              messages={this.state.messages}
+              message={this.state.message}
+              handleMessage={this.handleMessage}
+              sendMessage={this.sendMessage}
+              closeChat={this.closeChat}
+            />
 
-            <div className="container">
-              <div style={{ paddingTop: "20px" }}>
-                <Input value={window.location.href} disable="true"></Input>
-                <Button
-                  style={{
-                    backgroundColor: "#3f51b5",
-                    color: "whitesmoke",
-                    marginLeft: "20px",
-                    marginTop: "10px",
-                    width: "120px",
-                    fontSize: "10px",
-                  }}
-                  onClick={this.copyUrl}
-                >
-                  Copy invite link
-                </Button>
-              </div>
-              <Container>
-                <Row
-                  id="main"
-                  className="flex-container"
-                  style={{ margin: 0, padding: 0 }}
-                >
-                  {this.state.video == true ? (
-                    <video
-                      id="my-video"
-                      ref={this.localVideoref}
-                      autoPlay
-                      muted
-                      style={{
-                        borderStyle: "solid",
-                        borderColor: "#bdbdbd",
-                        margin: "10px",
-                        objectFit: "fill",
-                        width: "50%",
-                        height: "50%",
-                      }}
-                    ></video>
-                  ) : (
-                    <div style={{ backgroundColor: "red" }}>
-                      <h2>{this.state.username || "Username"}</h2>
-                    </div>
-                  )}
-                </Row>
-              </Container>
-            </div>
+            <VideoComp
+              video={this.state.video}
+              localVideoref={this.localVideoref}
+              username={this.state.username}
+            />
           </div>
         )}
       </div>
