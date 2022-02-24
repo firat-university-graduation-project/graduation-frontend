@@ -5,6 +5,7 @@ import "./Video.css"
 
 import PreviewModal from "../../components/Modal/Preview"
 import MessageModal from "../../components/Modal/Message"
+import VoiceMessageModal from "../../components/Modal/VoiceMessage"
 import AskForUsername from "../../components/AskForUsername"
 import ControlBar from "../../components/ControlBar"
 import VideoComp from "../../components/Video"
@@ -34,6 +35,7 @@ class Video extends Component {
       audio: false,
       screen: false,
       showModal: false,
+      showModalVoiceMessages: false,
       screenAvailable: false,
       messages: [],
       message: "",
@@ -343,6 +345,9 @@ class Video extends Component {
 
       socket.on("chat-message", this.addMessage)
 
+      //Todo: Implamentation voice messages
+      socket.on("voice-message", this.addMessage)
+
       socket.on("user-left", (id) => {
         let video = document.querySelector(`[data-socket="${id}"]`)
         if (video !== null) {
@@ -484,6 +489,11 @@ class Video extends Component {
 
   openChat = () => this.setState({ showModal: true, newmessages: 0 })
   closeChat = () => this.setState({ showModal: false })
+
+  openModalVoiceMessages = () => this.setState({ showModalVoiceMessages: true })
+  closeModalVoiceMessages = () =>
+    this.setState({ showModalVoiceMessages: false })
+
   handleMessage = (e) => this.setState({ message: e.target.value })
 
   addMessage = (data, sender, socketIdSender) => {
@@ -534,9 +544,15 @@ class Video extends Component {
                 this.setState({ mediaBlobUrl })
               }
               video={this.state.video}
+              openModalVoiceMessages={this.openModalVoiceMessages}
             />
 
             <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
+
+            <VoiceMessageModal
+              showModalVoiceMessages={this.state.showModalVoiceMessages}
+              closeModalVoiceMessages={this.closeModalVoiceMessages}
+            />
 
             <MessageModal
               showModal={this.state.showModal}
