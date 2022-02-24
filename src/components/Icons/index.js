@@ -8,7 +8,8 @@ import CallEndIcon from "@material-ui/icons/CallEnd"
 import ChatIcon from "@material-ui/icons/Chat"
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked"
 import GetAppIcon from "@material-ui/icons/GetApp"
-import FileCopyIcon from '@material-ui/icons/FileCopy';
+import FileCopyIcon from "@material-ui/icons/FileCopy"
+import DescriptionIcon from "@material-ui/icons/Description"
 
 export {
   VideocamIcon,
@@ -21,5 +22,6 @@ export {
   ChatIcon,
   RadioButtonCheckedIcon,
   GetAppIcon as DownloadIcon,
-  FileCopyIcon
+  FileCopyIcon,
+  DescriptionIcon,
 }
