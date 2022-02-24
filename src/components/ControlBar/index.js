@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { IconButton, Badge } from "@material-ui/core"
 import {
   VideocamIcon,
@@ -9,6 +9,7 @@ import {
   StopScreenShareIcon,
   CallEndIcon,
   ChatIcon,
+  DescriptionIcon,
 } from "../../components/Icons"
 import ScreenRecord from "../ScreenRecord"
 import CopyUrl from "../CopyUrl"
@@ -26,6 +27,7 @@ const ControlBar = (props) => {
     audio,
     video,
     handlePreviewUrl,
+    openModalVoiceMessages,
   } = props
 
   return (
@@ -58,6 +60,10 @@ const ControlBar = (props) => {
       <ScreenRecord parentCallback={handlePreviewUrl} />
 
       <CopyUrl />
+
+      <IconButton style={{ color: "#424242" }} onClick={openModalVoiceMessages}>
+        <DescriptionIcon />
+      </IconButton>
 
       <Badge
         badgeContent={newmessages}
