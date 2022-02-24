@@ -42,6 +42,7 @@ const MessageModal = (props) => {
           placeholder="Message"
           value={message}
           onChange={(e) => handleMessage(e)}
+          onKeyDown={(e) => e.key == "Enter" && sendMessage()}
         />
         <Button variant="contained" color="primary" onClick={sendMessage}>
           Send
