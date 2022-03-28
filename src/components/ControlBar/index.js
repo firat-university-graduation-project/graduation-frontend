@@ -13,6 +13,7 @@ import {
 } from "../../components/Icons"
 import ScreenRecord from "../ScreenRecord"
 import CopyUrl from "../CopyUrl"
+import { EmojiEmotionsIcon } from "../Icons"
 
 const ControlBar = (props) => {
   const {
@@ -28,6 +29,7 @@ const ControlBar = (props) => {
     video,
     handlePreviewUrl,
     openModalVoiceMessages,
+    openFaceApiModal,
   } = props
 
   return (
@@ -63,6 +65,10 @@ const ControlBar = (props) => {
 
       <IconButton style={{ color: "#424242" }} onClick={openModalVoiceMessages}>
         <DescriptionIcon />
+      </IconButton>
+
+      <IconButton style={{ color: "#424242" }} onClick={openFaceApiModal}>
+        <EmojiEmotionsIcon />
       </IconButton>
 
       <Badge
