@@ -10,6 +10,7 @@ import AskForUsername from "../../components/AskForUsername"
 import ControlBar from "../../components/ControlBar"
 import VideoComp from "../../components/Video"
 import MessageBar from "../../components/MessageBar"
+import FaceApiHook from "../../components/FaceAPI/FaceApiHook"
 
 let connections = {}
 const peerConnectionConfig = {
@@ -35,10 +36,14 @@ class Video extends Component {
       audio: false,
       screen: false,
       showModal: false,
+      showFaceApiModal: false,
       showModalVoiceMessages: false,
       screenAvailable: false,
       messages: [],
       message: "",
+      voiceMessages: [],
+      voiceMessage: "",
+      newVoiceMessages: 0,
       newmessages: 0,
       askForUsername: true,
       username: "",
@@ -346,7 +351,7 @@ class Video extends Component {
       socket.on("chat-message", this.addMessage)
 
       //Todo: Implamentation voice messages
-      socket.on("voice-message", this.addMessage)
+      socket.on("voice-message", this.addVoiceMessage)
 
       socket.on("user-left", (id) => {
         let video = document.querySelector(`[data-socket="${id}"]`)
@@ -489,6 +494,8 @@ class Video extends Component {
 
   openChat = () => this.setState({ showModal: true, newmessages: 0 })
   closeChat = () => this.setState({ showModal: false })
+  openFaceApiModal = () => this.setState({ showFaceApiModal: true })
+  closeFaceApiModal = () => this.setState({ showFaceApiModal: false })
 
   openModalVoiceMessages = () => this.setState({ showModalVoiceMessages: true })
   closeModalVoiceMessages = () =>
@@ -496,13 +503,27 @@ class Video extends Component {
 
   handleMessage = (e) => this.setState({ message: e.target.value })
 
+  handleVoiceMessage = (voiceMessages) => this.setState({ voiceMessages })
+
   addMessage = (data, sender, socketIdSender) => {
     this.setState((prevState) => ({
-      messages: [...prevState.messages, { sender: sender, data: data }],
+      messages: [...prevState.messages, { sender, data }],
     }))
     if (socketIdSender !== socketId) {
       this.setState({ newmessages: this.state.newmessages + 1 })
     }
+  }
+
+  addVoiceMessage = (data, sender, socketIdSender) => {
+    this.setState((prevState) => ({
+      voiceMessage: [...prevState.voiceMessages, { sender, data }],
+    }))
+    if (socketIdSender !== socketId) {
+      this.setState({ newVoiceMessages: this.state.newVoiceMessages + 1 })
+    }
+
+    console.log("voiceMessages: ", this.state.voiceMessages)
+    console.log("voiceMessage: ", this.state.voiceMessage)
   }
 
   handleUsername = (e) => this.setState({ username: e.target.value })
@@ -510,6 +531,11 @@ class Video extends Component {
   sendMessage = () => {
     socket.emit("chat-message", this.state.message, this.state.username)
     this.setState({ message: "", sender: this.state.username })
+  }
+
+  sendVoiceMessage = () => {
+    socket.emit("voice-message", this.state.voiceMessage, this.state.username)
+    this.setState({ voiceMessage: "", sender: this.state.username })
   }
 
   connect = () => {
@@ -545,6 +571,7 @@ class Video extends Component {
               }
               video={this.state.video}
               openModalVoiceMessages={this.openModalVoiceMessages}
+              openFaceApiModal={this.openFaceApiModal}
             />
 
             <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
@@ -552,15 +579,18 @@ class Video extends Component {
             <VoiceMessageModal
               showModalVoiceMessages={this.state.showModalVoiceMessages}
               closeModalVoiceMessages={this.closeModalVoiceMessages}
+              username={this.state.username}
+              sendVoiceMessage={this.sendVoiceMessage}
+              handleVoiceMessage={this.handleVoiceMessage}
             />
 
             <MessageModal
               showModal={this.state.showModal}
+              closeChat={this.closeChat}
               messages={this.state.messages}
               message={this.state.message}
               handleMessage={this.handleMessage}
               sendMessage={this.sendMessage}
-              closeChat={this.closeChat}
             />
             <VideoComp
               className="video_comp"
@@ -575,6 +605,10 @@ class Video extends Component {
               message={this.state.message}
               handleMessage={this.handleMessage}
               sendMessage={this.sendMessage}
+            />
+            <FaceApiHook
+              showFaceApiModal={this.state.showFaceApiModal}
+              closeFaceApiModal={this.closeFaceApiModal}
             />
           </div>
         )}

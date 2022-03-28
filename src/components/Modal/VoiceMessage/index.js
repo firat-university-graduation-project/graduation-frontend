@@ -1,21 +1,51 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import Modal from "react-bootstrap/Modal"
 import SpeechRecognition, {
   useSpeechRecognition,
 } from "react-speech-recognition"
 
 const VoiceMessageModal = (props) => {
-  const { showModalVoiceMessages, closeModalVoiceMessages } = props
+  const {
+    showModalVoiceMessages,
+    closeModalVoiceMessages,
+    username,
+    sendVoiceMessage,
+    handleVoiceMessage,
+  } = props
   const {
     transcript,
     listening,
     resetTranscript,
     browserSupportsSpeechRecognition,
   } = useSpeechRecognition()
+  const [transcriptState, setTranscriptState] = useState({
+    transcript: [],
+    username: "",
+  })
+
+  useEffect(() => {
+    SpeechRecognition.startListening({ language: "tr-TR", continuous: true })
+
+    if (transcript.length > 100) {
+      resetTranscript()
+      setTranscriptState({
+        transcript: [...transcriptState.transcript, transcript],
+        username,
+      })
+      // sendVoiceMessage()
+      // handleVoiceMessage()
+
+      // return () => {
+      //   resetTranscript()
+      // }
+    }
+  }, [transcript])
 
   if (!browserSupportsSpeechRecognition) {
     return <span>Browser doesn't support speech recognition.</span>
   }
+
+  // console.log(transcriptState)
 
   return (
     <Modal
@@ -38,7 +68,10 @@ const VoiceMessageModal = (props) => {
           <p>Microphone: {listening ? "on" : "off"}</p>
           <button
             onClick={() =>
-              SpeechRecognition.startListening({ language: "tr-TR" })
+              SpeechRecognition.startListening({
+                continuous: true,
+                language: "tr-TR",
+              })
             }
           >
             Start
