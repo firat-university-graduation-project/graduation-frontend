@@ -10,6 +10,7 @@ import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked"
 import GetAppIcon from "@material-ui/icons/GetApp"
 import FileCopyIcon from "@material-ui/icons/FileCopy"
 import DescriptionIcon from "@material-ui/icons/Description"
+import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions"
 
 export {
   VideocamIcon,
@@ -24,4 +25,5 @@ export {
   GetAppIcon as DownloadIcon,
   FileCopyIcon,
   DescriptionIcon,
+  EmojiEmotionsIcon,
 }
