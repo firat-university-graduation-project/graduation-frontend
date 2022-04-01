@@ -114,7 +114,7 @@ const FaceApiHook = (props) => {
         <div>
           {expressions
             .sort((a, b) => b[1] - a[1])
-            .filter((_, i) => i < 3)
+            .filter((_, i) => i < 1)
             .map(([e, w]) => (
               <p key={e + w}>
                 {e} {w}
