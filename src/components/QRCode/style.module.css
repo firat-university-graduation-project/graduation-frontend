@@ -1,0 +1,21 @@
+.details {
+  transition: height 750ms ease;
+  overflow: hidden;
+}
+
+details:not([open]) {
+  height: 2em;
+}
+
+details[open] {
+  height: 16.5em;
+}
+
+.details > div {
+  border: 3px solid black;
+}
+
+.details > div > img {
+  width: 50%;
+  height: 50%;
+}
