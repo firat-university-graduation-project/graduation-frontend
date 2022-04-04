@@ -38,8 +38,6 @@ const CopyUrl = () => {
   const [show, setShow] = useState(false)
   const [qrURL, setQrURL] = useState("")
 
-  console.log("qrUrl: ", qrURL)
-
   const download_qr = () => {
     saveAs(qrURL, "qr-code.jpg") // Put your image url here.
   }

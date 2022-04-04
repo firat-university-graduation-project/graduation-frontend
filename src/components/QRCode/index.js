@@ -10,7 +10,6 @@ const QRCode = (props) => {
   useEffect(async () => {
     try {
       setQrImgUrl(await QrCode.toDataURL(currentURL))
-      console.log("qrImgUrl: ", qrImgUrl)
       setQrURL(qrImgUrl)
     } catch (err) {
       console.error(err)
