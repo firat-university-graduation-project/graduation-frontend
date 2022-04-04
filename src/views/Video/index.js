@@ -340,7 +340,9 @@ class Video extends Component {
   }
 
   connectToSocketServer = () => {
-    socket = io.connect(process.env.REACT_APP_SERVER_URL, { secure: true })
+    socket = io.connect(process.env.REACT_APP_SERVER_URL_HEROKU, {
+      secure: true,
+    })
 
     socket.on("signal", this.gotMessageFromServer)
 
