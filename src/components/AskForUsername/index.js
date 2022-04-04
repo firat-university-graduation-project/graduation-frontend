@@ -1,10 +1,18 @@
 import React from "react"
 import { Input, Button } from "@material-ui/core"
+import QRCode from "../QRCode"
 
 const AskForUsername = (props) => {
   const { handleUsername, connect, username, localVideoref } = props
+
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+      }}
+    >
       <div
         style={{
           background: "white",
@@ -37,8 +45,8 @@ const AskForUsername = (props) => {
         >
           Connect
         </Button>
+        <QRCode />
       </div>
-
       <div
         style={{
           justifyContent: "center",
