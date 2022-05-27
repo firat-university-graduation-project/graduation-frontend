@@ -578,13 +578,13 @@ class Video extends Component {
 
             <PreviewModal mediaBlobUrl={this.state.mediaBlobUrl} />
 
-            {/* <VoiceMessageModal
+            <VoiceMessageModal
               showModalVoiceMessages={this.state.showModalVoiceMessages}
               closeModalVoiceMessages={this.closeModalVoiceMessages}
               username={this.state.username}
               sendVoiceMessage={this.sendVoiceMessage}
               handleVoiceMessage={this.handleVoiceMessage}
-            /> */}
+            />
 
             <MessageModal
               showModal={this.state.showModal}
